@@ -2,7 +2,7 @@
 
 > 🕹️ *Một tựa game thủ thành sống còn — bảo vệ căn cứ đến giây phút cuối cùng!*  
 
-![Unity](https://img.shields.io/badge/Engine-Unity-000?logo=unity&logoColor=white)
+![Unity](https://img.shields.io/badge/Unity-2022.3.36f1-blue)
 ![C#](https://img.shields.io/badge/Language-C%23-239120?logo=csharp&logoColor=white)
 ![Status](https://img.shields.io/badge/Progress-In_Development-orange)
 
