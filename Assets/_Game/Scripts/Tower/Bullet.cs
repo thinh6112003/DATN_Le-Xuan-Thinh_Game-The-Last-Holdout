@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     public int damage=5;
     public float speed; 
     public Coroutine coroutine;
+    public BaseTower myTower; 
     void Start()
     {
         
