@@ -16,7 +16,7 @@ public class BaseTower : MonoBehaviour
     public HashSet<BaseEnemy> allEnemyInRange= new HashSet<BaseEnemy>();
 
     void Start()
-    {
+    { 
         StartCoroutine(EnemyDetecting());
     }
     public IEnumerator Fire()
