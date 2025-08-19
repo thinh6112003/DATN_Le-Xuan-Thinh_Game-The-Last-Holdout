@@ -1,3 +1,4 @@
+using AssetKits.ParticleImage;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,10 +7,14 @@ using UnityEngine;
 public class BaseEnemy : MonoBehaviour
 {
     public int health;
+    public float speed; 
     public HealthEnemy healthEnemy;
+    public WaypointMover waypointMover;
+    public HashSet<BaseTower> allTowerIn= new HashSet<BaseTower>();
 
     private void Awake()
     {
+        waypointMover.moveSpeed = speed;
         healthEnemy.myBaseEnemy = this;
     }
 
@@ -29,6 +34,14 @@ public class BaseEnemy : MonoBehaviour
     }
     public void HandleDead()
     {
+        foreach (BaseTower tower in allTowerIn)
+        {
+            tower.HandleEnemyDead(this);
+        }
         Destroy(gameObject);
+    }
+    public void RemoveTowerIn(BaseTower tower)
+    {
+        allTowerIn.Remove(tower);
     }
 }
