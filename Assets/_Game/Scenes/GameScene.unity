@@ -1517,11 +1517,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6026282820460418976, guid: ab1e3d5b420ad884880c6030c9c3c88f,
-        type: 3}
-      propertyPath: bulletPerSecond
-      value: 10
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2694,7 +2689,7 @@ MonoBehaviour:
   - {fileID: 1034454295}
   - {fileID: 683523831}
   - {fileID: 1588587291}
-  timeSpawnNewEnemy: 0.5
+  timeSpawnNewEnemy: 1
 --- !u!1 &1811888952
 GameObject:
   m_ObjectHideFlags: 0
