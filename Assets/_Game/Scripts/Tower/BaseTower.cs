@@ -44,7 +44,7 @@ public class BaseTower : MonoBehaviour
                 float minDistance = Vector3.Distance(enemyNearest.transform.position, transform.position);
                 foreach (BaseEnemy enemyTmp in allEnemyInRange)
                 {
-                    if(enemyTmp != enemyNearest)
+                    if(enemyTmp != null && enemyNearest != null && enemyTmp != enemyNearest)
                     {
                         float distanse = Vector3.Distance(transform.position, enemyTmp.transform.position);
                         if (distanse< minDistance)
@@ -54,7 +54,7 @@ public class BaseTower : MonoBehaviour
                         }
                     }
                 }
-                enemy = enemyNearest.transform;
+                enemy = enemyNearest?.transform;
             }
             yield return null;
         }

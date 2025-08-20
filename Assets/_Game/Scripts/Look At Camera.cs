@@ -13,6 +13,6 @@ public class LookAtCamera : MonoBehaviour
     }
     private void Update()
     {
-        transform.eulerAngles = eulerAngleToCamera;
+        transform.eulerAngles = -eulerAngleToCamera;
     }
 }
