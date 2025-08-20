@@ -41,10 +41,16 @@ public class BaseTower : MonoBehaviour
             if(allEnemyInRange.Count > 0)
             {
                 BaseEnemy enemyNearest = allEnemyInRange.First();
+                if (enemyNearest.dead)
+                {
+                    allEnemyInRange.Remove(enemyNearest);
+                    Debug.LogWarning("bug bug bug bug");
+                    continue;
+                }
                 float minDistance = Vector3.Distance(enemyNearest.transform.position, transform.position);
                 foreach (BaseEnemy enemyTmp in allEnemyInRange)
                 {
-                    if(enemyTmp != enemyNearest)
+                    if(enemyTmp != null && enemyNearest != null && enemyTmp != enemyNearest)
                     {
                         float distanse = Vector3.Distance(transform.position, enemyTmp.transform.position);
                         if (distanse< minDistance)
@@ -54,7 +60,7 @@ public class BaseTower : MonoBehaviour
                         }
                     }
                 }
-                enemy = enemyNearest.transform;
+                enemy = enemyNearest?.transform;
             }
             yield return null;
         }
@@ -68,7 +74,6 @@ public class BaseTower : MonoBehaviour
             BaseEnemy newEnemy = other.gameObject.GetComponent<BaseEnemy>();
             if (!allEnemyInRange.Contains(newEnemy))
             {
-                Debug.Log("ua alo 1=======");
                 newEnemy.allTowerIn.Add(this);
                 allEnemyInRange.Add(newEnemy);
             }

@@ -147,7 +147,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 794e2ea3d442530459434aa9c820e39a, type: 2}
+  - {fileID: 2100000, guid: d5668fb720a84cf41bc0512ac7c6f44b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -230,7 +230,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d5668fb720a84cf41bc0512ac7c6f44b, type: 2}
+  - {fileID: 2100000, guid: 3909dfcd171f8d142836f9a77bae81b4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 6026282820460418976}
   - component: {fileID: 4257830373104529571}
   m_Layer: 0
-  m_Name: Tower
+  m_Name: Tower Bo Binh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -305,8 +305,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   gunTransform: {fileID: 1032433439411638549}
   health: 0
-  bulletDamage: 20
-  bulletPerSecond: 10
+  bulletDamage: 15
+  bulletPerSecond: 6
   attackRadius: 8
   attackRadiusDisplay: {fileID: 0}
 --- !u!54 &4257830373104529571
@@ -503,7 +503,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d5668fb720a84cf41bc0512ac7c6f44b, type: 2}
+  - {fileID: 2100000, guid: 3909dfcd171f8d142836f9a77bae81b4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
