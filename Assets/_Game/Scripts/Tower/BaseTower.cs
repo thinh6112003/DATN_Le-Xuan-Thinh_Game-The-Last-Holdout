@@ -41,6 +41,12 @@ public class BaseTower : MonoBehaviour
             if(allEnemyInRange.Count > 0)
             {
                 BaseEnemy enemyNearest = allEnemyInRange.First();
+                if (enemyNearest.dead)
+                {
+                    allEnemyInRange.Remove(enemyNearest);
+                    Debug.LogWarning("bug bug bug bug");
+                    continue;
+                }
                 float minDistance = Vector3.Distance(enemyNearest.transform.position, transform.position);
                 foreach (BaseEnemy enemyTmp in allEnemyInRange)
                 {
@@ -68,7 +74,6 @@ public class BaseTower : MonoBehaviour
             BaseEnemy newEnemy = other.gameObject.GetComponent<BaseEnemy>();
             if (!allEnemyInRange.Contains(newEnemy))
             {
-                Debug.Log("ua alo 1=======");
                 newEnemy.allTowerIn.Add(this);
                 allEnemyInRange.Add(newEnemy);
             }

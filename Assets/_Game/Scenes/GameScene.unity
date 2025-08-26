@@ -3234,7 +3234,7 @@ MonoBehaviour:
   - {fileID: 1034454295}
   - {fileID: 683523831}
   - {fileID: 1588587291}
-  timeSpawnNewEnemy: 2
+  timeSpawnNewEnemy: 0.3
 --- !u!1001 &1680108271
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -305,7 +305,7 @@ MonoBehaviour:
   enemy: {fileID: 0}
   gunTransform: {fileID: 1032433439411638549}
   health: 0
-  bulletDamage: 5
+  bulletDamage: 20
   bulletPerSecond: 10
   attackRadius: 8
   attackRadiusDisplay: {fileID: 0}

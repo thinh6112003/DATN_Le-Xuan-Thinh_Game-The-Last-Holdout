@@ -11,7 +11,7 @@ public class BaseEnemy : MonoBehaviour
     public HealthEnemy healthEnemy;
     public WaypointMover waypointMover;
     public HashSet<BaseTower> allTowerIn= new HashSet<BaseTower>();
-
+    public bool dead = false;
     private void Awake()
     {
         waypointMover.moveSpeed = speed;
@@ -38,7 +38,9 @@ public class BaseEnemy : MonoBehaviour
         {
             tower.HandleEnemyDead(this);
         }
-        Destroy(gameObject);
+        dead = true;
+        gameObject.SetActive(false);
+
     }
     public void RemoveTowerIn(BaseTower tower)
     {
