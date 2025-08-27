@@ -14,6 +14,10 @@ public class BaseTower : MonoBehaviour
     public float attackRadius;
     public Transform attackRadiusDisplay;
     public HashSet<BaseEnemy> allEnemyInRange= new HashSet<BaseEnemy>();
+    public BuidingSlot myBuildingSlot;
+    public int currentLevel = 1;
+    public List<GameObject> modelActive = new List<GameObject>();
+    public List<GameObject> modelCons = new List<GameObject>();
 
     void Start()
     { 
@@ -83,14 +87,12 @@ public class BaseTower : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("enemy out ");
             BaseEnemy outEnemy = other.gameObject.GetComponent<BaseEnemy>();
             allEnemyInRange.Remove(outEnemy);
             outEnemy.RemoveTowerIn(this);
             if (enemy == outEnemy.transform)
             {
                 enemy = null;
-                Debug.Log("ua alo 2+++++++++++++++++");
             }
         }
     }
@@ -101,6 +103,12 @@ public class BaseTower : MonoBehaviour
         {
             enemy = null;
         }
+    }
+    public virtual void UpdateLevel()
+    {
+        modelActive[currentLevel-1].SetActive(false);
+        currentLevel++;
+        modelActive[currentLevel].SetActive(true);
     }
     // Update is called once per frame
     void Update()
