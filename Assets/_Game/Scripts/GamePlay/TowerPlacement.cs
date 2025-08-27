@@ -7,12 +7,17 @@ public class TowerPlacement : MonoBehaviour
 {
     public BaseTower choseTower;
     public LayerMask slotLayer;
+    public LayerMask towerLayer;
     public BaseTower towerCung;
     public BaseTower towerBoBinh;
     public BaseTower towerPhao;
     public BaseTower towerPhep;
     public bool isChoose;
+    public bool isUpdate;
     public GameObject chooseCanvas;
+    public GameObject updateCanvas;
+    public BuidingSlot choosedBuildingSlot;
+    public BaseTower chooseTower; 
     // Update is called once per frame
     private void Start()
     {
@@ -27,16 +32,21 @@ public class TowerPlacement : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 100f, slotLayer))
             {
-                Debug.Log("TRUNG TARGET");
-                if (!isChoose)
+                BuidingSlot buidingSlot = hit.transform.parent.GetComponent<BuidingSlot>();
+                if (!buidingSlot.isBuilded)
                 {
-                    isChoose=true;
-                    chooseCanvas.SetActive(true);
-                    transform.position = hit.transform.position;
-                }
-                else
-                {
+                    buidingSlot.isBuilded = true;
+                    if (!isChoose)
+                    {
+                        isChoose = true;
+                        chooseCanvas.SetActive(true);
+                        transform.position = hit.transform.position;
+                        choosedBuildingSlot = buidingSlot;
+                    }
+                    else
+                    {
 
+                    }
                 }
             }
             else
@@ -51,6 +61,37 @@ public class TowerPlacement : MonoBehaviour
 
                 }
             }
+            Debug.Log("da qua check slot");
+            if (Physics.Raycast(ray, out hit, 100f, towerLayer))
+            {
+                Debug.Log(hit.transform.gameObject.name);
+                BaseTower baseTower = hit.transform.GetComponent<BaseTower>();
+                Debug.Log("Trung Tower");
+                if (!isUpdate)
+                {
+                    isUpdate = true;
+                    updateCanvas.SetActive(true);
+                    transform.position = hit.transform.position;
+                    chooseTower = baseTower;
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                if (isChoose)
+                {
+                    updateCanvas.SetActive(false);
+                    isChoose = false;
+                }
+                else
+                {
+
+                }
+            }
+
         }
     }
     public void ChooseTower(int towerType)
@@ -58,28 +99,46 @@ public class TowerPlacement : MonoBehaviour
         BaseTower newTower = null;
         switch((TowerType) towerType)
         {
-            case TowerType.cung:
+            case TowerType.Archer:
                 newTower = towerCung;
                 break;
-            case TowerType.boBinh:
+            case TowerType.Barracks:
                 newTower = towerBoBinh;
                 break;
-            case TowerType.phep:
+            case TowerType.Mage:
                 newTower = towerPhep;
                 break;
-            case TowerType.phao:
+            case TowerType.Cannon:
                 newTower = towerPhao;
                 break;
         }
         Instantiate(newTower, transform.position, Quaternion.identity);
-        isChoose = false;
+        newTower.myBuildingSlot = choosedBuildingSlot;
         chooseCanvas.SetActive(false);
+    }
+    public void ChooseSellUpdate(bool isUpdate)
+    {
+        if (isUpdate)
+        {
+            chooseTower.UpdateLevel();
+        }
+        else
+        {
+            SellTower();
+        }
+        updateCanvas.SetActive(false);
+        this.isUpdate = false;
+    }
+    public void SellTower()
+    {
+        chooseTower.myBuildingSlot.isBuilded = false;
+        Destroy(chooseTower.gameObject);
     }
 }
 public enum TowerType
 {
-    cung, 
-    boBinh,
-    phep, 
-    phao
+    Archer, 
+    Barracks,
+    Mage, 
+    Cannon
 }
