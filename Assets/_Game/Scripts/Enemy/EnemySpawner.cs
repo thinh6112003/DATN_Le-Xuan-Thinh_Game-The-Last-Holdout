@@ -6,6 +6,7 @@ public class EnemySpawner : MonoBehaviour
 {
     public Transform spawnPos;
     public BaseEnemy baseEnemyPrefab;
+    public BaseEnemy baseEnemyPrefab2;
     public List<Transform> listWaypoint;
     public float timeSpawnNewEnemy;
     void Start()
@@ -16,9 +17,11 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true) 
         {
-            BaseEnemy newEnemy = Instantiate(baseEnemyPrefab);
+            int random = Random.Range(0,2);
+            BaseEnemy newEnemy = Instantiate( random==0 ? baseEnemyPrefab : baseEnemyPrefab2);
             newEnemy.transform.position = spawnPos.position;
             newEnemy.waypointMover.waypoints = listWaypoint;
+            float randomTime = Random.Range(timeSpawnNewEnemy, timeSpawnNewEnemy * 1.75f);
             yield return new WaitForSeconds(timeSpawnNewEnemy);
         }
     }

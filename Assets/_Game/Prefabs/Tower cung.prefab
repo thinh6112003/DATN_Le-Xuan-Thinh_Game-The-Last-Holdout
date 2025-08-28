@@ -230,8 +230,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   gunTransform: {fileID: 1032433439411638549}
   health: 0
-  bulletDamage: 20
-  bulletPerSecond: 10
+  bulletDamage: 9
+  bulletPerSecond: 2.5
   attackRadius: 8
   attackRadiusDisplay: {fileID: 0}
   myBuildingSlot: {fileID: 0}

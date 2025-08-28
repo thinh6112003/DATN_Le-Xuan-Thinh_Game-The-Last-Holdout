@@ -108,7 +108,7 @@ public class BaseTower : MonoBehaviour
     {
         modelActive[currentLevel-1].SetActive(false);
         currentLevel++;
-        modelActive[currentLevel].SetActive(true);
+        modelActive[currentLevel-1].SetActive(true);
     }
     // Update is called once per frame
     void Update()

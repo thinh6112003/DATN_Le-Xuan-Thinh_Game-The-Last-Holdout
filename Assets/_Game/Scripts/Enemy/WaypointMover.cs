@@ -30,6 +30,7 @@ public class WaypointMover : MonoBehaviour
                     target.position,
                     moveSpeed * Time.deltaTime
                 );
+                transform.rotation = target.rotation;
                 yield return null;
             }
 

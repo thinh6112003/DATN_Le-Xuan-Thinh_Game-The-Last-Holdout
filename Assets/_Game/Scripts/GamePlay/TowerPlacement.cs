@@ -35,7 +35,6 @@ public class TowerPlacement : MonoBehaviour
                 BuidingSlot buidingSlot = hit.transform.parent.GetComponent<BuidingSlot>();
                 if (!buidingSlot.isBuilded)
                 {
-                    buidingSlot.isBuilded = true;
                     if (!isChoose)
                     {
                         isChoose = true;
@@ -81,10 +80,10 @@ public class TowerPlacement : MonoBehaviour
             }
             else
             {
-                if (isChoose)
+                if (isUpdate)
                 {
                     updateCanvas.SetActive(false);
-                    isChoose = false;
+                    isUpdate = false;
                 }
                 else
                 {
@@ -112,8 +111,10 @@ public class TowerPlacement : MonoBehaviour
                 newTower = towerPhao;
                 break;
         }
-        Instantiate(newTower, transform.position, Quaternion.identity);
-        newTower.myBuildingSlot = choosedBuildingSlot;
+        isChoose = false;
+        choosedBuildingSlot.isBuilded = true;
+        choseTower =  Instantiate(newTower, transform.position, Quaternion.identity);
+        choseTower.myBuildingSlot = choosedBuildingSlot;
         chooseCanvas.SetActive(false);
     }
     public void ChooseSellUpdate(bool isUpdate)
@@ -131,7 +132,10 @@ public class TowerPlacement : MonoBehaviour
     }
     public void SellTower()
     {
+        if (chooseTower == null) Debug.Log("CHOOOSE tOWER NULL");
+        if (chooseTower.myBuildingSlot == null) Debug.Log(" my building slot null ");
         chooseTower.myBuildingSlot.isBuilded = false;
+        Debug.LogError("ua ua ua ua alo alo alo");
         Destroy(chooseTower.gameObject);
     }
 }
