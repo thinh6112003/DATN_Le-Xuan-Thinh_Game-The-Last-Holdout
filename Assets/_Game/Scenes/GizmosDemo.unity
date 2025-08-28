@@ -1865,7 +1865,7 @@ MonoBehaviour:
   constructingTowers:
   - {fileID: 854918624}
   constructingProgress:
-  - 0.513
+  - 0.67
   drawSellRange: 1
 --- !u!1 &1676951098
 GameObject:
