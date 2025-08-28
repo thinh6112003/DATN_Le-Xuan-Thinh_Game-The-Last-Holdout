@@ -1994,6 +1994,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4753855413364887830, guid: 2cb7ab02a40fd5343aa4ded6a30666dc,
+        type: 3}
+      propertyPath: rrtSeed
+      value: 135
+      objectReference: {fileID: 0}
+    - target: {fileID: 4753855413364887830, guid: 2cb7ab02a40fd5343aa4ded6a30666dc,
+        type: 3}
+      propertyPath: rrtStep
+      value: 0.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 4753855413364887830, guid: 2cb7ab02a40fd5343aa4ded6a30666dc,
+        type: 3}
+      propertyPath: rrtIters
+      value: 37
+      objectReference: {fileID: 0}
     - target: {fileID: 6905769349731272674, guid: 2cb7ab02a40fd5343aa4ded6a30666dc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2533,7 +2548,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 1445280695}
   - {fileID: 939198466}
-  spawnRadius: 0.7
+  spawnRadius: 0.77
   drawGoalZone: 1
   goal: {fileID: 885571173}
   goalSize: {x: 0.5, y: 0.2, z: 0.5}
