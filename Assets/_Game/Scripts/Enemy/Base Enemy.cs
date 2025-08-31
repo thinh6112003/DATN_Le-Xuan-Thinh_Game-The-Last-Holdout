@@ -12,6 +12,7 @@ public class BaseEnemy : MonoBehaviour
     public WaypointMover waypointMover;
     public HashSet<BaseTower> allTowerIn= new HashSet<BaseTower>();
     public bool dead = false;
+    public int coinReward;
     private void Awake()
     {
         waypointMover.moveSpeed = speed;
@@ -46,4 +47,9 @@ public class BaseEnemy : MonoBehaviour
     {
         allTowerIn.Remove(tower);
     }
+}
+public enum EnemyType
+{
+    tank,
+    runner
 }

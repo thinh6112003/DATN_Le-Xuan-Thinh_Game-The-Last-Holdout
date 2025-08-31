@@ -132,10 +132,7 @@ public class TowerPlacement : MonoBehaviour
     }
     public void SellTower()
     {
-        if (chooseTower == null) Debug.Log("CHOOOSE tOWER NULL");
-        if (chooseTower.myBuildingSlot == null) Debug.Log(" my building slot null ");
         chooseTower.myBuildingSlot.isBuilded = false;
-        Debug.LogError("ua ua ua ua alo alo alo");
         Destroy(chooseTower.gameObject);
     }
 }

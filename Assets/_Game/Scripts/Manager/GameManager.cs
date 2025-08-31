@@ -10,6 +10,8 @@ public class GameManager : Singleton<GameManager>
     }
     public void InitGame()
     {
+        DataManager.Instance.InitNewGame(new GamePlayData());
+        UIManager.Instance.InitNewGame();
         //int idlevel = DataManager.Instance.userData.currentLevel;
         //string fileName = "level" + idlevel; // không có phần mở rộng
         //TextAsset jsonTextAsset = Resources.Load<TextAsset>(fileName);

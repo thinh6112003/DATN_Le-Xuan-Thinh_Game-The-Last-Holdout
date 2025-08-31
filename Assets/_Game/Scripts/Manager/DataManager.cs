@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DataManager : Singleton<DataManager>
 {
     public UserData userData;
+    public GamePlayData gamePlayData;
     public void Awake()
     {
         userData = LoadUserData();
@@ -35,5 +37,9 @@ public class DataManager : Singleton<DataManager>
     private void OnApplicationQuit()
     {
         SaveUserData(userData); // Lưu dữ liệu khi ứng dụng thoát
+    }
+    public void InitNewGame(GamePlayData newGamePlayData)
+    {
+        gamePlayData = newGamePlayData;
     }
 }

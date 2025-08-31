@@ -1,0 +1,260 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345ccaf97c162ee48a0c73b4e201b982, type: 3}
+  m_Name: LevelData
+  m_EditorClassIdentifier: 
+  listWaveDatas:
+  - listEnemySpawnDatas:
+    - timeInWave: 0
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 2
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 4
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    timeForWave: 5
+    timeForReady: 0
+  - listEnemySpawnDatas:
+    - timeInWave: 0
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 2
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 0
+    - timeInWave: 4
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 6
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 8
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 10
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    timeForWave: 12
+    timeForReady: 25
+  - listEnemySpawnDatas:
+    - timeInWave: 0
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 1.5
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 3
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    - timeInWave: 6
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 6.5
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 8
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 11
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 12
+    - timeInWave: 0
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 13
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 2
+    timeForWave: 15
+    timeForReady: 30
+  - listEnemySpawnDatas:
+    - timeInWave: 2
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 3
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 4
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 5
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 9
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    timeForWave: 10
+    timeForReady: 25
+  - listEnemySpawnDatas:
+    - timeInWave: 3
+      enemyType: 0
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 4
+      enemyType: 0
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 5
+      enemyType: 0
+      listPathID: 0000000001000000
+      laneID: 0
+    timeForWave: 3
+    timeForReady: 33
+  - listEnemySpawnDatas:
+    - timeInWave: 1
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 2
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 3
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    - timeInWave: 4
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 0
+    - timeInWave: 5
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 11.5
+      enemyType: 0
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 12
+      enemyType: 0
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 16
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 17
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 18
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    - timeInWave: 19
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 0
+    - timeInWave: 20
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 24.5
+      enemyType: 0
+      listPathID: 0000000002000000
+      laneID: 1
+    - timeInWave: 25
+      enemyType: 0
+      listPathID: 0000000002000000
+      laneID: 1
+    timeForWave: 26
+    timeForReady: 35
+  - listEnemySpawnDatas:
+    - timeInWave: 0
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 0.4
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 0.8
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 1.2
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    - timeInWave: 1.6
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    - timeInWave: 2
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 2.4
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 0
+    - timeInWave: 2.8
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 3.2
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 2
+    - timeInWave: 3.6
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 4
+      enemyType: 1
+      listPathID: 0000000001000000
+      laneID: 1
+    - timeInWave: 4.4
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 0
+    - timeInWave: 4.8
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 0
+    - timeInWave: 5.2
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 5.6
+      enemyType: 1
+      listPathID: 0000000002000000
+      laneID: 2
+    - timeInWave: 0
+      enemyType: 0
+      listPathID: 
+      laneID: 0
+    timeForWave: 0
+    timeForReady: 35
