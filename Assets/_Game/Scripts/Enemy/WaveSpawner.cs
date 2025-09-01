@@ -20,20 +20,32 @@ public class WaveSpawner : MonoBehaviour
         StartCoroutine(WaveSpawnHandle());
     }
     bool clickPlayWave = false;
+    bool isStartWave = true;
     IEnumerator WaveSpawnHandle()
     {
         int currentWaveIDLocal = currentWaveID;
+        if (currentWaveID == UIManager.Instance.totalWaveCount) yield break;
         bool showPlayWave = false;
         bool showButtonNewWave = false; 
         currentEnemyID = 0;
         float timer = 0;
+        Debug.Log(currentWaveIDLocal);
         float maxTime = levelData.listWaveDatas[currentWaveIDLocal].timeForWave;
-        float waitToSpawn = levelData.listWaveDatas[currentWaveIDLocal].timeForWave;
-        float waitOfNext = levelData.listWaveDatas[currentWaveIDLocal + 1].timeForWave;
+        float waitToSpawn = levelData.listWaveDatas[currentWaveIDLocal].timeForReady;
+        float waitOfNext = (currentWaveIDLocal +1) >= UIManager.Instance.totalWaveCount ? 1000 : levelData.listWaveDatas[currentWaveIDLocal + 1].timeForReady;
         startWaveCanvas.SetActive(true);
+        startWave.onClick.RemoveAllListeners();
         startWave.onClick.AddListener(() =>
         {
             startWaveCanvas.SetActive(false);
+            if(!isStartWave){
+                DataManager.Instance.gamePlayData.waveCount++;
+                UIManager.Instance.UpdateUIInGame();
+            }
+            else
+            {
+                isStartWave = false;
+            }
         });
         while (startWaveCanvas.activeInHierarchy && (timer < waitToSpawn || currentWaveIDLocal == 0))
         { 
@@ -61,18 +73,12 @@ public class WaveSpawner : MonoBehaviour
             }
             if(timer > maxTime && !showPlayWave)
             {
-                StartCoroutine(WaveSpawnHandle());
+                currentWaveID++;
+                StartCoroutine(  WaveSpawnHandle());
                 showPlayWave = true;
             }
             yield return null;
         }
-        if (currentWaveID == currentWaveIDLocal)
-        {
-            currentWaveID++;
-            startWaveCanvas.SetActive(false);
-            StartCoroutine (WaveSpawnHandle());
-        }
-        yield return null;
     }
     public void SpawnEnemy(EnemyType enemyType, List<int> listWayPoint, int laneID)
     {

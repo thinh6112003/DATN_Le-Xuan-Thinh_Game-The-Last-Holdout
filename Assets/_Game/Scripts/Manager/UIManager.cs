@@ -58,6 +58,7 @@ public class UIManager : Singleton<UIManager>
     {
         gamePlayData = DataManager.Instance.gamePlayData;
         totalWaveCount = gamePlayData.waveCount;
+        gamePlayData.waveCount = 1;
         UpdateUIInGame();
     }
     public void UpdateUIInGame()
