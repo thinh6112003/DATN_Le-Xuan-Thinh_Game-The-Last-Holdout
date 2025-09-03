@@ -19,11 +19,11 @@ public class BaseTower : MonoBehaviour
     public List<GameObject> modelActive = new List<GameObject>();
     public List<GameObject> modelCons = new List<GameObject>();
 
-    void Start()
+    public virtual void Start()
     { 
         StartCoroutine(EnemyDetecting());
     }
-    public IEnumerator Fire()
+    public virtual IEnumerator Fire()
     {
         while (enemy != null)
         {
@@ -38,7 +38,7 @@ public class BaseTower : MonoBehaviour
         StartCoroutine(EnemyDetecting());
         yield return null;
     }
-    public IEnumerator EnemyDetecting()
+    public virtual IEnumerator EnemyDetecting()
     {
         while (enemy == null)
         {
@@ -71,7 +71,7 @@ public class BaseTower : MonoBehaviour
         StartCoroutine(Fire());
         yield return null;
     }
-    public void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
@@ -83,7 +83,7 @@ public class BaseTower : MonoBehaviour
             }
         }
     }
-    public void OnTriggerExit(Collider other)
+    public virtual void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
@@ -96,7 +96,7 @@ public class BaseTower : MonoBehaviour
             }
         }
     }
-    public void HandleEnemyDead(BaseEnemy _enemy)
+    public virtual void HandleEnemyDead(BaseEnemy _enemy)
     {
         allEnemyInRange.Remove(_enemy);
         if (enemy == _enemy.transform)
@@ -109,10 +109,5 @@ public class BaseTower : MonoBehaviour
         modelActive[currentLevel-1].SetActive(false);
         currentLevel++;
         modelActive[currentLevel-1].SetActive(true);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

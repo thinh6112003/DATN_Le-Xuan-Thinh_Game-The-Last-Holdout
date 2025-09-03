@@ -1,91 +1,304 @@
-// Made with Amplify Shader Editor
-// Available at the Unity Asset Store - http://u3d.as/y3X 
-Shader "HPMaskTint"
+﻿Shader "URP/HPMaskTint"
 {
-	Properties
-	{
-		_BaseColor("BaseColor", 2D) = "white" {}
-		_Mask("Mask", 2D) = "white" {}
-		_Color01("Color01", Color) = (0,0,0,0)
-		_Brightness("Brightness", Float) = 2
-		_EmissionPower("EmissionPower", Float) = 1.2
-		[HideInInspector] _texcoord( "", 2D ) = "white" {}
-		[HideInInspector] __dirty( "", Int ) = 1
-	}
+    Properties
+    {
+        _BaseColor("BaseColor", 2D) = "white" {}
+        _Mask("Mask", 2D) = "white" {}
+        _Color01("Color01", Color) = (0,0,0,0)
+        _Brightness("Brightness", Float) = 2
+        _EmissionPower("EmissionPower", Float) = 1.2
+        [HideInInspector] _texcoord( "", 2D ) = "white" {}
+    }
 
-	SubShader
-	{
-		Tags{ "RenderType" = "Opaque"  "Queue" = "Geometry+0" "IsEmissive" = "true"  }
-		Cull Back
-		CGPROGRAM
-		#pragma target 3.0
-		#pragma surface surf StandardSpecular keepalpha addshadow fullforwardshadows 
-		struct Input
-		{
-			float2 uv_texcoord;
-		};
+    SubShader
+    {
+        Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry+0" }
+        Cull Back
 
-		uniform sampler2D _BaseColor;
-		uniform float4 _BaseColor_ST;
-		uniform sampler2D _Mask;
-		uniform float4 _Mask_ST;
-		uniform float4 _Color01;
-		uniform float _Brightness;
-		uniform float _EmissionPower;
+        Pass
+        {
+            Name "UniversalForward"
+            Tags { "LightMode"="UniversalForward" }
 
-		void surf( Input i , inout SurfaceOutputStandardSpecular o )
-		{
-			float4 _Color0 = float4(0,0,0,0);
-			o.Albedo = _Color0.rgb;
-			float2 uv_BaseColor = i.uv_texcoord * _BaseColor_ST.xy + _BaseColor_ST.zw;
-			float4 tex2DNode16 = tex2D( _BaseColor, uv_BaseColor );
-			float2 uv_Mask = i.uv_texcoord * _Mask_ST.xy + _Mask_ST.zw;
-			float4 tex2DNode13 = tex2D( _Mask, uv_Mask );
-			float4 temp_cast_1 = (tex2DNode13.r).xxxx;
-			float4 blendOpSrc22 = tex2DNode16;
-			float4 blendOpDest22 = min( temp_cast_1 , _Color01 );
-			float4 lerpResult4 = lerp( tex2DNode16 , ( ( saturate( ( blendOpSrc22 * blendOpDest22 ) )) * _Brightness ) , tex2DNode13.r);
-			o.Emission = ( lerpResult4 * _EmissionPower ).rgb;
-			o.Specular = _Color0.rgb;
-			o.Smoothness = 1.0;
-			o.Alpha = 1;
-		}
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
 
-		ENDCG
-	}
-	Fallback "Diffuse"
-	//CustomEditor "ASEMaterialInspector"
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
+            #pragma multi_compile_fragment _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _RENDER_PASS_ENABLED
+            #pragma multi_compile_fog
+            #pragma multi_compile_instancing
+            #pragma multi_compile _ DOTS_INSTANCING_ON
+
+            #define _SPECULAR_SETUP 1
+
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/TextureStack.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DBuffer.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/ShaderPass.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+                float2 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                float2 uv_BaseColor : TEXCOORD0;
+                float2 uv_Mask : TEXCOORD1;
+                float3 positionWS : TEXCOORD2;
+                float3 normalWS : TEXCOORD3;
+                float4 shadowCoord : TEXCOORD4;
+                DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 5);
+                float4 fogFactorAndVertexLight : TEXCOORD6;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            TEXTURE2D(_BaseColor);
+            SAMPLER(sampler_BaseColor);
+            float4 _BaseColor_ST;
+
+            TEXTURE2D(_Mask);
+            SAMPLER(sampler_Mask);
+            float4 _Mask_ST;
+
+            CBUFFER_START(UnityPerMaterial)
+            float4 _Color01;
+            float _Brightness;
+            float _EmissionPower;
+            CBUFFER_END
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output = (Varyings)0;
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_TRANSFER_INSTANCE_ID(input, output);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+                VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
+
+                output.positionCS = vertexInput.positionCS;
+                output.positionWS = vertexInput.positionWS;
+                output.normalWS = normalInput.normalWS;
+                output.shadowCoord = GetShadowCoord(vertexInput);
+
+                output.uv_BaseColor = TRANSFORM_TEX(input.texcoord, _BaseColor);
+                output.uv_Mask = TRANSFORM_TEX(input.texcoord, _Mask);
+
+                half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+                half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+
+                OUTPUT_SH(output.normalWS.xyz, output.vertexSH);
+
+                return output;
+            }
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+
+                float4 tex2DNode16 = SAMPLE_TEXTURE2D(_BaseColor, sampler_BaseColor, input.uv_BaseColor);
+                float4 tex2DNode13 = SAMPLE_TEXTURE2D(_Mask, sampler_Mask, input.uv_Mask);
+
+                float4 Color0 = float4(0,0,0,0);
+
+                float4 temp_cast_1 = (tex2DNode13.r).xxxx;
+                float4 blendOpDest22 = min(temp_cast_1, _Color01);
+                float4 blendOpSrc22 = tex2DNode16;
+                float4 lerpResult4 = lerp(tex2DNode16, (saturate(blendOpSrc22 * blendOpDest22) * _Brightness), tex2DNode13.r);
+
+                float3 Emission = (lerpResult4 * _EmissionPower).rgb;
+
+                float3 Albedo = Color0.rgb;
+                float3 Specular = Color0.rgb;
+                float Smoothness = 1.0;
+                float Alpha = 1.0;
+
+                SurfaceData surfaceData = (SurfaceData)0;
+                surfaceData.albedo = Albedo;
+                surfaceData.specular = Specular;
+                surfaceData.metallic = 0.0h;
+                surfaceData.smoothness = Smoothness;
+                surfaceData.normalTS = half3(0,0,0);
+                surfaceData.emission = Emission;
+                surfaceData.occlusion = 1.0h;
+                surfaceData.alpha = Alpha;
+                surfaceData.clearCoatMask = 0.0h;
+                surfaceData.clearCoatSmoothness = 1.0h;
+
+                InputData inputData = (InputData)0;
+                inputData.positionWS = input.positionWS;
+                inputData.positionCS = input.positionCS;
+                inputData.normalWS = NormalizeNormalPerPixel(input.normalWS);
+                inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+                inputData.shadowCoord = input.shadowCoord;
+
+                half4 fogFactorAndVertexLight = input.fogFactorAndVertexLight;
+                half fogFactor = fogFactorAndVertexLight.x;
+                inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), fogFactor);
+
+                #if defined(_ADDITIONAL_LIGHTS_VERTEX)
+                    inputData.vertexLighting = fogFactorAndVertexLight.yzw;
+                #else
+                    inputData.vertexLighting = half3(0, 0, 0);
+                #endif
+
+                #if defined(DYNAMICLIGHTMAP_ON)
+                    inputData.bakedGI = SAMPLE_GI(input.dynamicLightmapUV, input.vertexSH, input.normalWS);
+                #else
+                    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, input.normalWS);
+                #endif
+
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+                inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
+
+                #if defined(DEBUG_DISPLAY)
+                    half4 debugColor;
+                    if (CanDebugOverrideOutputColor(inputData, surfaceData, debugColor))
+                    {
+                        return debugColor;
+                    }
+                #endif
+
+                BRDFData brdfData;
+                InitializeBRDFData(surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.alpha, brdfData);
+
+                half4 color = UniversalFragmentPBR(inputData, surfaceData);
+                color.rgb = MixFog(color.rgb, inputData.fogCoord);
+                return color;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode"="ShadowCaster" }
+
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+
+            HLSLPROGRAM
+            #pragma vertex ShadowPassVertex
+            #pragma fragment ShadowPassFragment
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            float3 _LightDirection;
+            float3 _LightPosition;
+
+            Varyings ShadowPassVertex(Attributes input)
+            {
+                Varyings output = (Varyings)0;
+                UNITY_SETUP_INSTANCE_ID(input);
+
+                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
+
+                #if _CASTING_PUNCTUAL_LIGHT_SHADOW
+                    float3 lightDirectionWS = normalize(_LightPosition - positionWS);
+                #else
+                    float3 lightDirectionWS = _LightDirection;
+                #endif
+
+                float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
+
+                #if UNITY_REVERSED_Z
+                    positionCS.z = min(positionCS.z, UNITY_NEAR_CLIP_VALUE);
+                #else
+                    positionCS.z = max(positionCS.z, UNITY_NEAR_CLIP_VALUE);
+                #endif
+
+                output.positionCS = positionCS;
+                return output;
+            }
+
+            half4 ShadowPassFragment(Varyings input) : SV_Target
+            {
+                return 0;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode"="DepthOnly" }
+
+            ZWrite On
+            ColorMask R
+
+            HLSLPROGRAM
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            Varyings DepthOnlyVertex(Attributes input)
+            {
+                Varyings output = (Varyings)0;
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                return output;
+            }
+
+            half4 DepthOnlyFragment(Varyings input) : SV_Target
+            {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+                return 0;
+            }
+            ENDHLSL
+        }
+    }
+    FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }
-/*ASEBEGIN
-Version=16100
-7;29;1906;1004;1994.555;755.9792;1.523254;True;True
-Node;AmplifyShaderEditor.SamplerNode;13;-1584.08,-201.1143;Float;True;Property;_Mask;Mask;1;0;Create;True;0;0;False;0;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ColorNode;9;-1533.454,67.83549;Float;False;Property;_Color01;Color01;2;0;Create;True;0;0;False;0;0,0,0,0;0.07552986,0.4010895,0.9338235,0;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleMinOpNode;15;-1187.421,-22.27275;Float;True;2;0;FLOAT;0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SamplerNode;16;-1320.287,-492.1947;Float;True;Property;_BaseColor;BaseColor;0;0;Create;True;0;0;False;0;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.BlendOpsNode;22;-700.0234,-91.18038;Float;False;Multiply;True;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;24;-691.5071,118.5692;Float;False;Property;_Brightness;Brightness;3;0;Create;True;0;0;False;0;2;2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;23;-435.5347,11.95664;Float;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.LerpOp;4;-321.1234,-394.204;Float;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;26;-628.3837,265.6878;Float;False;Property;_EmissionPower;EmissionPower;4;0;Create;True;0;0;False;0;1.2;1.2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;29;-23.27925,405.6642;Float;False;Constant;_Color0;Color 0;1;0;Create;True;0;0;False;0;0,0,0,0;0.07552986,0.4010895,0.9338235,0;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;30;6.607246,-311.3464;Float;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;2;-325,351;Float;False;Constant;_Smoothness;Smoothness;6;0;Create;True;0;0;False;0;1;0.2;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;300.8773,-243.4785;Float;False;True;2;Float;ASEMaterialInspector;0;0;StandardSpecular;HPMaskTint;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;False;-1;0;False;-1;False;0;False;-1;0;False;-1;False;0;Opaque;0.5;True;True;0;False;Opaque;;Geometry;All;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;True;0;0;False;-1;0;False;-1;0;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;-1;-1;-1;-1;0;False;0;0;False;-1;-1;0;False;-1;0;0;0;16;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
-WireConnection;15;0;13;1
-WireConnection;15;1;9;0
-WireConnection;22;0;16;0
-WireConnection;22;1;15;0
-WireConnection;23;0;22;0
-WireConnection;23;1;24;0
-WireConnection;4;0;16;0
-WireConnection;4;1;23;0
-WireConnection;4;2;13;1
-WireConnection;30;0;4;0
-WireConnection;30;1;26;0
-WireConnection;0;0;29;0
-WireConnection;0;2;30;0
-WireConnection;0;3;29;0
-WireConnection;0;4;2;0
-ASEEND*/
-//CHKSM=74C22848387CA176CD6061BE84CF4BB1FD93B858

@@ -17,7 +17,7 @@ MonoBehaviour:
     - timeInWave: 0
       enemyType: 1
       listPathID: 0000000001000000
-      laneID: 0
+      laneID: 1
     - timeInWave: 2
       enemyType: 1
       listPathID: 0000000001000000
@@ -83,7 +83,7 @@ MonoBehaviour:
     - timeInWave: 11
       enemyType: 1
       listPathID: 0000000001000000
-      laneID: 12
+      laneID: 2
     - timeInWave: 0
       enemyType: 1
       listPathID: 0000000002000000
@@ -253,8 +253,8 @@ MonoBehaviour:
       listPathID: 0000000002000000
       laneID: 2
     - timeInWave: 0
-      enemyType: 0
-      listPathID: 
+      enemyType: 1
+      listPathID: 0000000000000000
       laneID: 0
     timeForWave: 0
     timeForReady: 35
