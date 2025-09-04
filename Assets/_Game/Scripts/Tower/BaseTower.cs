@@ -27,13 +27,13 @@ public class BaseTower : MonoBehaviour
     {
         while (enemy != null)
         {
-            yield return new WaitForSeconds(1f/ bulletPerSecond);
             if (enemy == null) break;
             Bullet newBullet =  Instantiate(bullet);
             newBullet.damage = bulletDamage;
             newBullet.myTower = this;
             newBullet.transform.position = gunTransform.position;
             newBullet.SetTarget(enemy);
+            yield return new WaitForSeconds(1f/ bulletPerSecond);
         }
         StartCoroutine(EnemyDetecting());
         yield return null;

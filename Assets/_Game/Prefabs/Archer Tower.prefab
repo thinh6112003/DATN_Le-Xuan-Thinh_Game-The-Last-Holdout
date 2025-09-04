@@ -249,6 +249,7 @@ MonoBehaviour:
   - {fileID: 4292427084879577017}
   - {fileID: 4496928121964853744}
   archer: {fileID: 4959917594073575319}
+  animator: {fileID: 5005608811503813409}
 --- !u!54 &4257830373104529571
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -977,6 +978,12 @@ Transform:
 --- !u!4 &4911715401003740145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4322524458110768, guid: 092a71447fb4da44a9d000deaa993740,
+    type: 3}
+  m_PrefabInstance: {fileID: 4910806449052935361}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5005608811503813409 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95084404371580896, guid: 092a71447fb4da44a9d000deaa993740,
     type: 3}
   m_PrefabInstance: {fileID: 4910806449052935361}
   m_PrefabAsset: {fileID: 0}
