@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class ArtilleryBullet : Bullet
 {
     public Transform target;
     public int damage=5;
@@ -13,14 +13,8 @@ public class Bullet : MonoBehaviour
     {
         
     }
-    public virtual void SetTarget(Transform target)
-    {
-        this.target = target;
-        newTargetPos = target.position;
-    }
-    // Update is called once per frame
     Vector3 newTargetPos;
-    public virtual void Update()
+    public override void Update()
     {
         if (target.gameObject.activeInHierarchy) newTargetPos = target.position;
         else
@@ -34,17 +28,5 @@ public class Bullet : MonoBehaviour
         Vector3 bulletPos = Vector3.MoveTowards(transform.position, newTargetPos, Time.deltaTime * speed);
         transform.position = bulletPos;
         transform.LookAt(newTargetPos);
-    }
-    public virtual IEnumerator RemoveMissingBullet()
-    {
-        yield return new WaitForSeconds(1);
-        Destroy(gameObject);
-        yield return null;
-    }
-    public virtual bool IsToTarget()
-    {
-        return Mathf.Abs(transform.position.x - newTargetPos.x) < 0.05f
-            && Mathf.Abs(transform.position.y - newTargetPos.y) < 0.05f
-            && Mathf.Abs(transform.position.z - newTargetPos.z) < 0.05f;
     }
 }
