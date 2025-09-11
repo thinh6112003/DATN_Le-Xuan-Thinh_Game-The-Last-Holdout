@@ -27,6 +27,7 @@ public class UIManager : Singleton<UIManager>
     }
     public async void ShowLose()
     {
+        EventObserver.Notice("Lose");
         loseGameUI.gameObject.SetActive(true); 
     }
     public async void HideLose()

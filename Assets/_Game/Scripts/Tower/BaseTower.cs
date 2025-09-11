@@ -32,7 +32,7 @@ public class BaseTower : MonoBehaviour
             newBullet.damage = bulletDamage;
             newBullet.myTower = this;
             newBullet.transform.position = gunTransform.position;
-            newBullet.SetTarget(enemy);
+            newBullet.SetTarget(enemy,gunTransform.position);
             yield return new WaitForSeconds(1f/ bulletPerSecond);
         }
         StartCoroutine(EnemyDetecting());

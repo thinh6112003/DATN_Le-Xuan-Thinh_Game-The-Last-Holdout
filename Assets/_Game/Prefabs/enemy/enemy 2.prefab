@@ -97,6 +97,8 @@ MonoBehaviour:
   healthEnemy: {fileID: 6392964607965324556}
   waypointMover: {fileID: 2921231613627797473}
   dead: 0
+  coinReward: 0
+  myanimator: {fileID: 3603466829172003555}
 --- !u!54 &4564983688852178551
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -635,6 +637,12 @@ PrefabInstance:
 --- !u!4 &3603466829162724627 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6928589415477905156, guid: eab7d955b38f12e45b725d1d6da3a635,
+    type: 3}
+  m_PrefabInstance: {fileID: 5919241326539454999}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3603466829172003555 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6928589415484844276, guid: eab7d955b38f12e45b725d1d6da3a635,
     type: 3}
   m_PrefabInstance: {fileID: 5919241326539454999}
   m_PrefabAsset: {fileID: 0}

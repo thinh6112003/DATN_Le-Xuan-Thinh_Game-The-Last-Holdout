@@ -10,16 +10,4 @@ public class ArtilleryTower : BaseTower
     {
         base.Start();
     }
-    public void Update()
-    {
-        if(enemy != null)
-        {
-            archer.LookAt(enemy.position);
-            animator.SetBool("Fire", true);
-        }
-        else
-        {
-            animator.SetBool("Fire", false);
-        }
-    }
 }

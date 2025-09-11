@@ -13,10 +13,12 @@ public class BaseEnemy : MonoBehaviour
     public HashSet<BaseTower> allTowerIn= new HashSet<BaseTower>();
     public bool dead = false;
     public int coinReward;
+    public Animator myanimator;
     private void Awake()
     {
         waypointMover.moveSpeed = speed;
         healthEnemy.myBaseEnemy = this;
+        EventObserver.AddListener("Lose", LoseHandle);
     }
 
     // Update is called once per frame
@@ -46,6 +48,15 @@ public class BaseEnemy : MonoBehaviour
     public void RemoveTowerIn(BaseTower tower)
     {
         allTowerIn.Remove(tower);
+    }
+    public void TakeDamage(int damage)
+    {
+        healthEnemy.DecHealth(damage);
+    }
+    public void LoseHandle(object[] args)
+    {
+        Destroy(waypointMover);
+        Destroy(myanimator);
     }
 }
 public enum EnemyType

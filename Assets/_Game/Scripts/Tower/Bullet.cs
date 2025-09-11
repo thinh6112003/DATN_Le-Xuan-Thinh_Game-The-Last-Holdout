@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
     {
         
     }
-    public virtual void SetTarget(Transform target)
+    public virtual void SetTarget(Transform target, Vector3 beginPos)
     {
         this.target = target;
         newTargetPos = target.position;

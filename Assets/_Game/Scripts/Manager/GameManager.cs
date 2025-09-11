@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    public int Hearts;
     private void Start()
     {
         InitGame();   
