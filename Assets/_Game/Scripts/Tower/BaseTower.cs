@@ -18,6 +18,7 @@ public class BaseTower : MonoBehaviour
     public int currentLevel = 1;
     public List<GameObject> modelActive = new List<GameObject>();
     public List<GameObject> modelCons = new List<GameObject>();
+    public List<int> costUpgrade = new List<int>();
 
     public virtual void Start()
     { 
@@ -109,5 +110,11 @@ public class BaseTower : MonoBehaviour
         modelActive[currentLevel-1].SetActive(false);
         currentLevel++;
         modelActive[currentLevel-1].SetActive(true);
+    }
+    public int GetPriceUpdate()
+    {
+        if (currentLevel - 1 < costUpgrade.Count)
+            return costUpgrade[currentLevel - 1];
+        return -1;
     }
 }
