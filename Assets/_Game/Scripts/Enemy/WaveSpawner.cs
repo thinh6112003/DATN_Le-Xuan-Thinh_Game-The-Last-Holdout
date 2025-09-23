@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,9 +16,15 @@ public class WaveSpawner : MonoBehaviour
     public GameObject startWaveCanvas;
     public LevelData levelData;
     public Image progress;
+    public List<GameObject> characterList;
+
+    public int currentShowID = 0;
+
+    public static WaveSpawner Instance;
     void Start()
     {
         StartCoroutine(WaveSpawnHandle());
+        Instance = this;
     }
     bool clickPlayWave = false;
     bool isStartWave = true;
@@ -61,7 +68,8 @@ public class WaveSpawner : MonoBehaviour
             timer += Time.deltaTime;
             if(timer > waitTimeNewEnemy)
             {
-                SpawnEnemy(enemySpawnData.enemyType, enemySpawnData.listPathID, enemySpawnData.laneID);
+                bool showChar = currentEnemyID == levelData.listWaveDatas[currentWaveIDLocal].listEnemySpawnDatas.Count - 1;
+                SpawnEnemy(enemySpawnData.enemyType, enemySpawnData.listPathID, enemySpawnData.laneID, showChar);
                 currentEnemyID++;
                 if(currentEnemyID == levelData.listWaveDatas[currentWaveIDLocal].listEnemySpawnDatas.Count)
                 {
@@ -80,11 +88,21 @@ public class WaveSpawner : MonoBehaviour
             yield return null;
         }
     }
-    public void SpawnEnemy(EnemyType enemyType, List<int> listWayPoint, int laneID)
+    public void SpawnEnemy(EnemyType enemyType, List<int> listWayPoint, int laneID, bool showChar)
     {
         BaseEnemy newEnemy = Instantiate(enemyPrefabs[(int)enemyType]);
         newEnemy.gameObject.SetActive(true);
         newEnemy.waypointMover.waypoints = mapData.GetPath(listWayPoint, laneID);
         newEnemy.transform.position = newEnemy.waypointMover.waypoints[0].position;
+        newEnemy.hasChar = showChar;
+    }
+    public void ShowNewChar()
+    {
+        characterList[currentShowID].SetActive(true);
+        currentShowID++;
+    }
+    public TextMeshProUGUI GetText()
+    {
+        return characterList[currentShowID].GetComponentInChildren<TextMeshProUGUI>();
     }
 }

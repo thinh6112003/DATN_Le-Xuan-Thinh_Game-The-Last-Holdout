@@ -1,0 +1,12 @@
+Font: FC Mikado Medium  Style: Medium
+Point Size: 71   SP/PD Ratio: 12,7%
+
+Characters included: 229/229
+Missing characters: 0
+Excluded characters: 0
+
+Characters missing from font file:
+----------------------------------------
+
+Characters excluded from packing:
+----------------------------------------
