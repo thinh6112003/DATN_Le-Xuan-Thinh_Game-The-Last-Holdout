@@ -10,10 +10,10 @@ public class GateCheck : MonoBehaviour
         {
             Debug.Log("ua ua ua"); 
             DataManager.Instance.gamePlayData.heart -= 1;
-            UIManager.Instance.UpdateUIInGame();
+            GamePlayUI.Instance.UpdateUIInGame();
             if(DataManager.Instance.gamePlayData.heart== 0)
             {
-                UIManager.Instance.ShowLose();
+                /// lose game handle action
             }
         }
     }

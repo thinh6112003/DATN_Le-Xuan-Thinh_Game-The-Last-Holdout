@@ -1,71 +1,203 @@
-using DG.Tweening;
-using System.Threading.Tasks;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI; // Thư viện để làm việc với các thành phần UI như Button, Text
+using System.Collections; // Thư viện cho Coroutines (nếu cần hiệu ứng chuyển cảnh)
 
-public class UIManager : Singleton<UIManager>
+/// <summary>
+/// UIManager quản lý tất cả các màn hình và popup trong game.
+/// Nó hoạt động như một Singleton để dễ dàng truy cập từ các script khác.
+/// </summary>
+public class UIManager : MonoBehaviour
 {
-    public GameObject winGameUI;
-    public GameObject loseGameUI;
-    public GameObject pauseGameUI;
-    public GameObject gamePlayUI;
+    #region Singleton
+    // Triển khai Singleton Pattern
+    private static UIManager _instance;
+    public static UIManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Tìm một đối tượng UIManager trong Scene
+                _instance = FindObjectOfType<UIManager>();
+                if (_instance == null)
+                {
+                    // Nếu không tìm thấy, tạo một GameObject mới và thêm component UIManager vào
+                    GameObject singletonObject = new GameObject("UIManager");
+                    _instance = singletonObject.AddComponent<UIManager>();
+                }
+            }
+            return _instance;
+        }
+    }
 
-    public TextMeshProUGUI textHeart;
-    public TextMeshProUGUI textWaveCount;
-    public TextMeshProUGUI textCoin;
+    private void Awake()
+    {
+        // Đảm bảo chỉ có một instance duy nhất tồn tại
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+            // DontDestroyOnLoad(gameObject); // Bỏ comment dòng này nếu UIManager cần tồn tại qua các Scene
+        }
+    }
+    #endregion
 
-    public int totalWaveCount;
-    public GamePlayData gamePlayData;
+    #region UI References
+    // Tham chiếu đến các GameObjects của các màn hình và popup
+    [Header("Screens")]
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private GameObject storyScreen;
+    [SerializeField] private GameObject homeScreen;
+    [SerializeField] private GameObject levelSelectScreen;
+    [SerializeField] private GameObject gameplayScreen;
+    [SerializeField] private GameObject victoryScreen;
+
+    [Header("Popups")]
+    [SerializeField] private GameObject settingsPopup;
+    [SerializeField] private GameObject pausePopup;
+    [SerializeField] private GameObject loseLevelPopup; // Sử dụng Popup thay vì Screen để hiển thị trên GameplayScreen
+    [SerializeField] private GameObject winLevelPopup;  // Tương tự
+
+    [Header("Gameplay UI Elements")]
+    [SerializeField] private Text goldText;
+    [SerializeField] private Text livesText;
+    [SerializeField] private Text waveText;
+
+    #endregion
 
     private void Start()
     {
+        // Khi game bắt đầu, ẩn tất cả các màn hình và chỉ hiển thị màn hình Loading
+        HideAllScreens();
+        ShowLoadingScreen();
+        // Giả lập quá trình tải game, sau đó chuyển sang Story hoặc Home
+        StartCoroutine(InitialLoad());
     }
-    public async void ShowWin()
+
+    // Giả lập việc tải tài nguyên
+    private IEnumerator InitialLoad()
     {
-        winGameUI.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f); // Chờ 2 giây
+        HideLoadingScreen();
+
+        // Kiểm tra xem đây có phải lần đầu người chơi vào game không (dựa trên PlayerPrefs)
+        bool isFirstTime = PlayerPrefs.GetInt("FirstTimePlay", 1) == 1;
+
+        if (isFirstTime)
+        {
+            ShowStoryScreen();
+            PlayerPrefs.SetInt("FirstTimePlay", 0); // Đánh dấu không còn là lần đầu
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            ShowHomeScreen();
+        }
     }
-    public async void ShowLose()
+
+    #region Screen & Popup Control Methods
+
+    /// <summary>
+    /// Ẩn tất cả các màn hình và popup chính.
+    /// </summary>
+    public void HideAllScreens()
     {
-        EventObserver.Notice("Lose");
-        loseGameUI.gameObject.SetActive(true); 
+        loadingScreen.SetActive(false);
+        storyScreen.SetActive(false);
+        homeScreen.SetActive(false);
+        levelSelectScreen.SetActive(false);
+        gameplayScreen.SetActive(false);
+        victoryScreen.SetActive(false);
+
+        settingsPopup.SetActive(false);
+        pausePopup.SetActive(false);
+        winLevelPopup.SetActive(false);
+        loseLevelPopup.SetActive(false);
     }
-    public async void HideLose()
+
+    // Các phương thức để hiển thị từng màn hình cụ thể
+    public void ShowLoadingScreen() => loadingScreen.SetActive(true);
+    public void HideLoadingScreen() => loadingScreen.SetActive(false);
+
+    public void ShowStoryScreen()
     {
-        loseGameUI.gameObject.SetActive(false);
+        HideAllScreens();
+        storyScreen.SetActive(true);
     }
-    public async void HideWin()
+
+    public void ShowHomeScreen()
     {
-        winGameUI.gameObject.SetActive(false);
+        HideAllScreens();
+        homeScreen.SetActive(true);
     }
-    public async void ShowPauseGameUI()
+
+    public void ShowLevelSelectScreen()
     {
-        pauseGameUI.gameObject.SetActive(true);
+        HideAllScreens();
+        levelSelectScreen.SetActive(true);
     }
-    public async void HidePauseGameUI()
+
+    public void ShowGameplayScreen()
     {
-        pauseGameUI.gameObject.SetActive(false);
+        HideAllScreens();
+        gameplayScreen.SetActive(true);
     }
-    public async void ShowGamePlayUI()
+
+    public void ShowVictoryScreen()
     {
-        gamePlayUI.gameObject.SetActive(true);
+        HideAllScreens();
+        victoryScreen.SetActive(true);
     }
-    public async void HideGamePlayUI()
+
+    // Các phương thức để quản lý popup
+    public void ToggleSettingsPopup(bool show) => settingsPopup.SetActive(show);
+    public void TogglePausePopup(bool show) => pausePopup.SetActive(show);
+    public void ShowWinLevelPopup() => winLevelPopup.SetActive(true);
+    public void ShowLoseLevelPopup() => loseLevelPopup.SetActive(true);
+
+    #endregion
+
+    #region UI Data Update Methods
+
+    /// <summary>
+    /// Cập nhật số vàng hiển thị trên giao diện Gameplay.
+    /// </summary>
+    /// <param name="amount">Số vàng hiện tại.</param>
+    public void UpdateGold(int amount)
     {
-        gamePlayUI.gameObject.SetActive(false);
+        if (goldText != null)
+        {
+            goldText.text = amount.ToString();
+        }
     }
-    
-    public void InitNewGame()
+
+    /// <summary>
+    /// Cập nhật số mạng sống hiển thị trên giao diện Gameplay.
+    /// </summary>
+    /// <param name="count">Số mạng còn lại.</param>
+    public void UpdateLives(int count)
     {
-        gamePlayData = DataManager.Instance.gamePlayData;
-        totalWaveCount = gamePlayData.waveCount;
-        gamePlayData.waveCount = 1;
-        UpdateUIInGame();
+        if (livesText != null)
+        {
+            livesText.text = "Lives: " + count;
+        }
     }
-    public void UpdateUIInGame()
+
+    /// <summary>
+    /// Cập nhật thông tin về đợt tấn công của kẻ địch.
+    /// </summary>
+    /// <param name="currentWave">Đợt hiện tại.</param>
+    /// <param name="totalWaves">Tổng số đợt.</param>
+    public void UpdateWaveInfo(int currentWave, int totalWaves)
     {
-        textHeart.text = gamePlayData.heart.ToString();
-        textCoin.text = gamePlayData.coin.ToString();
-        textWaveCount.text = "Wave "+  gamePlayData.waveCount.ToString() + "/" + totalWaveCount;
+        if (waveText != null)
+        {
+            waveText.text = $"Wave: {currentWave} / {totalWaves}";
+        }
     }
+
+    #endregion
 }

@@ -3369,6 +3369,7 @@ Transform:
   - {fileID: 1089168730}
   - {fileID: 1904412818}
   - {fileID: 1101429649}
+  - {fileID: 933870381}
   - {fileID: 1324976233}
   - {fileID: 1447973969}
   - {fileID: 1821092419}
@@ -3840,6 +3841,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 0}
   eulerAngleToCamera: {x: 0, y: 0, z: 0}
+  isNguoc: 0
 --- !u!4 &227994105
 Transform:
   m_ObjectHideFlags: 0
@@ -17181,6 +17183,73 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 933818014}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &933870380
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 182434871}
+    m_Modifications:
+    - target: {fileID: 1668440608428578, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_Name
+      value: TB_Env_Mound_B (40)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.1431296
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.0992
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -26.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e, type: 3}
+--- !u!4 &933870381 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4697128997193768, guid: 3c19e959a9536a74f8b0c1f3e66ecb3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 933870380}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &934216707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21514,6 +21583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 2002810279}
   eulerAngleToCamera: {x: 0, y: 0, z: 0}
+  isNguoc: 0
 --- !u!1001 &1192874438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23018,18 +23088,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75d84bdce7996dc46b8e19d7414a6e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winGameUI: {fileID: 0}
-  loseGameUI: {fileID: 837586450}
-  pauseGameUI: {fileID: 0}
-  gamePlayUI: {fileID: 0}
-  textHeart: {fileID: 1803039281}
-  textWaveCount: {fileID: 1411851181}
-  textCoin: {fileID: 1215821001}
-  totalWaveCount: 0
-  gamePlayData:
-    waveCount: 5
-    heart: 10
-    coin: 500
+  loadingScreen: {fileID: 0}
+  storyScreen: {fileID: 0}
+  homeScreen: {fileID: 0}
+  levelSelectScreen: {fileID: 0}
+  gameplayScreen: {fileID: 0}
+  victoryScreen: {fileID: 0}
+  settingsPopup: {fileID: 0}
+  pausePopup: {fileID: 0}
+  loseLevelPopup: {fileID: 0}
+  winLevelPopup: {fileID: 0}
+  goldText: {fileID: 0}
+  livesText: {fileID: 0}
+  waveText: {fileID: 0}
 --- !u!4 &1262454747
 Transform:
   m_ObjectHideFlags: 0
@@ -28563,6 +28634,8 @@ MonoBehaviour:
   startWaveCanvas: {fileID: 1634828593}
   levelData: {fileID: 11400000, guid: b26f6e92d7185ee4aa6c51ca07a19607, type: 2}
   progress: {fileID: 1703018002}
+  characterList: []
+  currentShowID: 0
 --- !u!1 &1601216753
 GameObject:
   m_ObjectHideFlags: 0

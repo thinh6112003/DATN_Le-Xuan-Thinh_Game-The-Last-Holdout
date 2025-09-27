@@ -31,7 +31,7 @@ public class WaveSpawner : MonoBehaviour
     IEnumerator WaveSpawnHandle()
     {
         int currentWaveIDLocal = currentWaveID;
-        if (currentWaveID == UIManager.Instance.totalWaveCount) yield break;
+        if (currentWaveID == GamePlayUI.Instance.totalWaveCount) yield break;
         bool showPlayWave = false;
         bool showButtonNewWave = false; 
         currentEnemyID = 0;
@@ -39,7 +39,7 @@ public class WaveSpawner : MonoBehaviour
         Debug.Log(currentWaveIDLocal);
         float maxTime = levelData.listWaveDatas[currentWaveIDLocal].timeForWave;
         float waitToSpawn = levelData.listWaveDatas[currentWaveIDLocal].timeForReady;
-        float waitOfNext = (currentWaveIDLocal +1) >= UIManager.Instance.totalWaveCount ? 1000 : levelData.listWaveDatas[currentWaveIDLocal + 1].timeForReady;
+        float waitOfNext = (currentWaveIDLocal +1) >= GamePlayUI.Instance.totalWaveCount ? 1000 : levelData.listWaveDatas[currentWaveIDLocal + 1].timeForReady;
         startWaveCanvas.SetActive(true);
         startWave.onClick.RemoveAllListeners();
         startWave.onClick.AddListener(() =>
@@ -47,7 +47,7 @@ public class WaveSpawner : MonoBehaviour
             startWaveCanvas.SetActive(false);
             if(!isStartWave){
                 DataManager.Instance.gamePlayData.waveCount++;
-                UIManager.Instance.UpdateUIInGame();
+                GamePlayUI.Instance.UpdateUIInGame();
             }
             else
             {

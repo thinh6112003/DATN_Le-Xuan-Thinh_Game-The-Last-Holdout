@@ -376,7 +376,7 @@ public class TowerPlacement : MonoBehaviour
         choseTower =  Instantiate(newTower, transform.position, Quaternion.identity);
         choseTower.myBuildingSlot = choosedBuildingSlot;
         UpdateStatusOfButton();
-        UIManager.Instance.UpdateUIInGame();
+        GamePlayUI.Instance.UpdateUIInGame();
     }
     
     public void ChooseSellUpdate(bool isUpdate)
@@ -393,7 +393,7 @@ public class TowerPlacement : MonoBehaviour
             }
             if (!statusofUpdate) return;
             DataManager.Instance.gamePlayData.coin -= chooseTower.GetPriceUpdate();
-            UIManager.Instance.UpdateUIInGame() ;
+            GamePlayUI.Instance.UpdateUIInGame() ;
             chooseTower.UpdateLevel();
             UpdateStatusOfButton();
         }
