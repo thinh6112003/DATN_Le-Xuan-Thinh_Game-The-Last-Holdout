@@ -106,6 +106,7 @@ public class TowerPlacement : MonoBehaviour
     {
         isChoose = false;
         UpdateStatusOfButton();
+        EventObserver.AddListener("UpdateStatusOfButton", UpdateStatusOfButton);
     }
     
     void Update()
@@ -200,6 +201,10 @@ public class TowerPlacement : MonoBehaviour
         tichXanhPhep.SetActive(false);
         tichXanhUpdate.SetActive(false);
         tichXanhSell.SetActive(false);
+    }
+    public void UpdateStatusOfButton(object[] args)
+    {
+        UpdateStatusOfButton();
     }
     public void UpdateStatusOfButton()
     {
@@ -373,7 +378,7 @@ public class TowerPlacement : MonoBehaviour
         isChoose = false;
         chooseCanvas.SetActive(false);
         choosedBuildingSlot.isBuilded = true;
-        choseTower =  Instantiate(newTower, transform.position, Quaternion.identity);
+        choseTower =  Instantiate(newTower, transform.position + Vector3.up*(0.58f - 0.247f), Quaternion.identity, choosedBuildingSlot.transform);
         choseTower.myBuildingSlot = choosedBuildingSlot;
         UpdateStatusOfButton();
         GamePlayUI.Instance.UpdateUIInGame();

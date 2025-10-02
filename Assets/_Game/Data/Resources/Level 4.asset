@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 345ccaf97c162ee48a0c73b4e201b982, type: 3}
-  m_Name: Level1
+  m_Name: Level 4
   m_EditorClassIdentifier: 
   listWaveDatas:
   - listEnemySpawnDatas:
@@ -258,3 +258,6 @@ MonoBehaviour:
       laneID: 0
     timeForWave: 0
     timeForReady: 35
+  goldStart: 800
+  heartStart: 10
+  wordEnglishReward: Balloon

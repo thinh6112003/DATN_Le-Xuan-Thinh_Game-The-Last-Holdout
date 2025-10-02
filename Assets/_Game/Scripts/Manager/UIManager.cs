@@ -1,203 +1,225 @@
 ﻿using UnityEngine;
-using UnityEngine.UI; // Thư viện để làm việc với các thành phần UI như Button, Text
-using System.Collections; // Thư viện cho Coroutines (nếu cần hiệu ứng chuyển cảnh)
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
-/// <summary>
-/// UIManager quản lý tất cả các màn hình và popup trong game.
-/// Nó hoạt động như một Singleton để dễ dàng truy cập từ các script khác.
-/// </summary>
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    #region Singleton
-    // Triển khai Singleton Pattern
-    private static UIManager _instance;
-    public static UIManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                // Tìm một đối tượng UIManager trong Scene
-                _instance = FindObjectOfType<UIManager>();
-                if (_instance == null)
-                {
-                    // Nếu không tìm thấy, tạo một GameObject mới và thêm component UIManager vào
-                    GameObject singletonObject = new GameObject("UIManager");
-                    _instance = singletonObject.AddComponent<UIManager>();
-                }
-            }
-            return _instance;
-        }
-    }
+    public GameObject loadingScreen;
+    public Slider loadingProgressBar;
+    public GameObject storyScreen;
+    public List<GameObject> storyImages;
+    public Button skipStoryButton;
+    public GameObject homeScreen;
+    public GameObject settingPopup;
+    public GameObject levelSelectScreen;
+    public GameObject pauseScreen;
+    public GameObject winScreen;
+    public GameObject loseScreen;
+    public GameObject victoryScreen;
+    public GameObject confirmQuitPopup; // Popup xác nhận quit
 
-    private void Awake()
-    {
-        // Đảm bảo chỉ có một instance duy nhất tồn tại
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _instance = this;
-            // DontDestroyOnLoad(gameObject); // Bỏ comment dòng này nếu UIManager cần tồn tại qua các Scene
-        }
-    }
-    #endregion
+    public LevelSelectUI levelSelectUI;
 
-    #region UI References
-    // Tham chiếu đến các GameObjects của các màn hình và popup
-    [Header("Screens")]
-    [SerializeField] private GameObject loadingScreen;
-    [SerializeField] private GameObject storyScreen;
-    [SerializeField] private GameObject homeScreen;
-    [SerializeField] private GameObject levelSelectScreen;
-    [SerializeField] private GameObject gameplayScreen;
-    [SerializeField] private GameObject victoryScreen;
+    public Button playBtn;
+    public Button settingBtn;
+    public Button closeSettingBtn;
+    public Button quitBtn;
+    public Button restartBtn;
+    public Button resumeBtn;
+    public Button homeBtn; // Button Back từ Pause, Win, Lose về Home
 
-    [Header("Popups")]
-    [SerializeField] private GameObject settingsPopup;
-    [SerializeField] private GameObject pausePopup;
-    [SerializeField] private GameObject loseLevelPopup; // Sử dụng Popup thay vì Screen để hiển thị trên GameplayScreen
-    [SerializeField] private GameObject winLevelPopup;  // Tương tự
+    public Button replayLoseBtn;
+    public Button backLoseBtn;
+    public Button replayWinBtn;
+    public Button nextWinBtn;
+    public Button goHomeVictoryBtn;
 
-    [Header("Gameplay UI Elements")]
-    [SerializeField] private Text goldText;
-    [SerializeField] private Text livesText;
-    [SerializeField] private Text waveText;
+    public Button closePauseBtn;
+    public Button backFromLevelSelectBtn; // Button Back từ Level Select về Home
+    public Button confirmQuitBtn; // Button Confirm trong popup quit
+    public Button cancelQuitBtn; // Button Cancel trong popup quit
 
-    #endregion
+    private int currentStoryIndex = 0;
 
     private void Start()
     {
-        // Khi game bắt đầu, ẩn tất cả các màn hình và chỉ hiển thị màn hình Loading
-        HideAllScreens();
-        ShowLoadingScreen();
-        // Giả lập quá trình tải game, sau đó chuyển sang Story hoặc Home
-        StartCoroutine(InitialLoad());
+        playBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.LevelSelect));
+        settingBtn.onClick.AddListener(() => settingPopup.SetActive(true));
+        closeSettingBtn.onClick.AddListener(() => settingPopup.SetActive(false));
+        quitBtn.onClick.AddListener(() => ShowConfirmQuitPopup());
+        backFromLevelSelectBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.Home));
+
+        restartBtn.onClick.AddListener(() => GameManager.Instance.RestartGame());
+        resumeBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.Gameplay));
+        homeBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.Home));
+        closePauseBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.Gameplay));
+        replayLoseBtn.onClick.AddListener(() => GameManager.Instance.RestartGame());
+        backLoseBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.LevelSelect));
+        replayWinBtn.onClick.AddListener(() => GameManager.Instance.RestartGame());
+        nextWinBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.LevelSelect));
+        goHomeVictoryBtn.onClick.AddListener(() => GameStateManager.Instance.ChangeState(GameState.Home));
+
+        // Setup confirm quit popup buttons
+        confirmQuitBtn.onClick.AddListener(() => ConfirmQuit());
+        cancelQuitBtn.onClick.AddListener(() => CancelQuit());
+        levelSelectUI.Init();
     }
 
-    // Giả lập việc tải tài nguyên
-    private IEnumerator InitialLoad()
+    private void ShowConfirmQuitPopup()
     {
-        yield return new WaitForSeconds(2f); // Chờ 2 giây
-        HideLoadingScreen();
+        confirmQuitPopup.SetActive(true);
+    }
 
-        // Kiểm tra xem đây có phải lần đầu người chơi vào game không (dựa trên PlayerPrefs)
-        bool isFirstTime = PlayerPrefs.GetInt("FirstTimePlay", 1) == 1;
+    private void ConfirmQuit()
+    {
+        confirmQuitPopup.SetActive(false);
+        GameStateManager.Instance.ChangeState(GameState.Quit);
+    }
 
-        if (isFirstTime)
+    private void CancelQuit()
+    {
+        confirmQuitPopup.SetActive(false);
+    }
+
+    public void OnGameStateChanged(GameState state)
+    {
+        if(!IsPopUpState(state)) HideAllScreens();
+        switch (state)
         {
-            ShowStoryScreen();
-            PlayerPrefs.SetInt("FirstTimePlay", 0); // Đánh dấu không còn là lần đầu
-            PlayerPrefs.Save();
-        }
-        else
-        {
-            ShowHomeScreen();
+            case GameState.Loading:
+                loadingScreen.SetActive(true);
+                StartCoroutine(ShowLoadingProgress());
+                break;
+            case GameState.Story:
+                storyScreen.SetActive(true);
+                ShowStoryImage(0);
+                break;
+            case GameState.Home:
+                homeScreen.SetActive(true);
+                break;
+            case GameState.LevelSelect:
+                levelSelectScreen.SetActive(true);
+                break;
+            case GameState.Gameplay:
+                // UI gameplay sẽ được kích hoạt sau khi load level
+                break;
+            case GameState.Pause:
+                pauseScreen.SetActive(true);
+                break;
+            case GameState.Win:
+                levelSelectUI.Init();
+                winScreen.SetActive(true);
+                break;
+            case GameState.Lose:
+                loseScreen.SetActive(true);
+                break;
+            case GameState.Victory:
+                levelSelectUI.Init();
+                victoryScreen.SetActive(true);
+                break;
+            case GameState.Quit:
+                QuitApplication();
+                break;
         }
     }
 
-    #region Screen & Popup Control Methods
+    public bool IsPopUpState(GameState state)
+    {
+        switch(state)
+        {
+            case GameState.Pause:
+            case GameState.Win:
+            case GameState.Lose:
+                return true;
+            default:
+                return false;
+        }
+    }
 
-    /// <summary>
-    /// Ẩn tất cả các màn hình và popup chính.
-    /// </summary>
-    public void HideAllScreens()
+    private void QuitApplication()
+    {
+        // Lưu dữ liệu trước khi thoát
+        DataManager.Instance.SaveUserData(DataManager.Instance.userData);
+
+#if UNITY_EDITOR
+        // Trong Unity Editor: Stop play mode
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // Trên thiết bị thực: Thoát ứng dụng
+        Application.Quit();
+#endif
+    }
+
+    private void HideAllScreens()
     {
         loadingScreen.SetActive(false);
         storyScreen.SetActive(false);
         homeScreen.SetActive(false);
+        settingPopup.SetActive(false);
         levelSelectScreen.SetActive(false);
-        gameplayScreen.SetActive(false);
+        pauseScreen.SetActive(false);
+        winScreen.SetActive(false);
+        loseScreen.SetActive(false);
         victoryScreen.SetActive(false);
-
-        settingsPopup.SetActive(false);
-        pausePopup.SetActive(false);
-        winLevelPopup.SetActive(false);
-        loseLevelPopup.SetActive(false);
+        confirmQuitPopup.SetActive(false); // Ẩn popup quit khi chuyển state
     }
 
-    // Các phương thức để hiển thị từng màn hình cụ thể
-    public void ShowLoadingScreen() => loadingScreen.SetActive(true);
-    public void HideLoadingScreen() => loadingScreen.SetActive(false);
-
-    public void ShowStoryScreen()
+    private IEnumerator ShowLoadingProgress()
     {
-        HideAllScreens();
-        storyScreen.SetActive(true);
-    }
-
-    public void ShowHomeScreen()
-    {
-        HideAllScreens();
-        homeScreen.SetActive(true);
-    }
-
-    public void ShowLevelSelectScreen()
-    {
-        HideAllScreens();
-        levelSelectScreen.SetActive(true);
-    }
-
-    public void ShowGameplayScreen()
-    {
-        HideAllScreens();
-        gameplayScreen.SetActive(true);
-    }
-
-    public void ShowVictoryScreen()
-    {
-        HideAllScreens();
-        victoryScreen.SetActive(true);
-    }
-
-    // Các phương thức để quản lý popup
-    public void ToggleSettingsPopup(bool show) => settingsPopup.SetActive(show);
-    public void TogglePausePopup(bool show) => pausePopup.SetActive(show);
-    public void ShowWinLevelPopup() => winLevelPopup.SetActive(true);
-    public void ShowLoseLevelPopup() => loseLevelPopup.SetActive(true);
-
-    #endregion
-
-    #region UI Data Update Methods
-
-    /// <summary>
-    /// Cập nhật số vàng hiển thị trên giao diện Gameplay.
-    /// </summary>
-    /// <param name="amount">Số vàng hiện tại.</param>
-    public void UpdateGold(int amount)
-    {
-        if (goldText != null)
+        float progress = 0f;
+        while (progress < 1f)
         {
-            goldText.text = amount.ToString();
+            progress += Time.deltaTime * 0.5f;
+            loadingProgressBar.value = progress;
+            yield return null;
         }
+        GameStateManager.Instance.ChangeState(GameState.Story);
     }
 
-    /// <summary>
-    /// Cập nhật số mạng sống hiển thị trên giao diện Gameplay.
-    /// </summary>
-    /// <param name="count">Số mạng còn lại.</param>
-    public void UpdateLives(int count)
+    public void ShowStoryImage(int index)
     {
-        if (livesText != null)
-        {
-            livesText.text = "Lives: " + count;
-        }
+        for (int i = 0; i < storyImages.Count; i++)
+            storyImages[i].SetActive(i == index);
+        currentStoryIndex = index;
     }
 
-    /// <summary>
-    /// Cập nhật thông tin về đợt tấn công của kẻ địch.
-    /// </summary>
-    /// <param name="currentWave">Đợt hiện tại.</param>
-    /// <param name="totalWaves">Tổng số đợt.</param>
-    public void UpdateWaveInfo(int currentWave, int totalWaves)
+    public void NextStoryImage()
     {
-        if (waveText != null)
-        {
-            waveText.text = $"Wave: {currentWave} / {totalWaves}";
-        }
+        if (currentStoryIndex < storyImages.Count - 1)
+            ShowStoryImage(currentStoryIndex + 1);
+        else
+            GameStateManager.Instance.ChangeState(GameState.Home);
     }
 
-    #endregion
+    public void SkipStory()
+    {
+        GameStateManager.Instance.ChangeState(GameState.Home);
+    }
+
+    // Public methods để có thể gọi từ Button OnClick trong Inspector
+    public void BackToHome()
+    {
+        GameStateManager.Instance.ChangeState(GameState.Home);
+    }
+
+    public void GoToLevelSelect()
+    {
+        GameStateManager.Instance.ChangeState(GameState.LevelSelect);
+    }
+
+    public void QuitGame()
+    {
+        ShowConfirmQuitPopup();
+    }
+
+    public void ConfirmQuitGame()
+    {
+        ConfirmQuit();
+    }
+
+    public void CancelQuitGame()
+    {
+        CancelQuit();
+    }
 }

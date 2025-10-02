@@ -11,14 +11,16 @@ public class WaveSpawner : MonoBehaviour
     public float timeSpawnNewEnemy;
     public MapData mapData;
     public int currentWaveID;
-    public int currentEnemyID;
+    //public int currentEnemyID;
     public Button startWave;
     public GameObject startWaveCanvas;
     public LevelData levelData;
     public Image progress;
     public List<GameObject> characterList;
+    public List<GameObject> bgCharacterList;
 
     public int currentShowID = 0;
+    int count = 0;
 
     public static WaveSpawner Instance;
     void Start()
@@ -28,13 +30,36 @@ public class WaveSpawner : MonoBehaviour
     }
     bool clickPlayWave = false;
     bool isStartWave = true;
-    IEnumerator WaveSpawnHandle()
+    public void InitGame()
+    {
+        InitString(levelData.wordEnglishReward);
+        // Kh?i t?o ð?m enemy cho win condition
+        GamePlayUI.Instance.InitEnemyCount(levelData);
+    }
+    public void InitString(string st)
+    {
+        for (int i = 0; i < bgCharacterList.Count; i++)
+        {
+            if (i <= st.Length - 1)
+            {
+                bgCharacterList[i].SetActive(true);
+                characterList[i].SetActive(false);
+                characterList[i].GetComponent<TextMeshProUGUI>().text = st[i].ToString();
+            }
+            else
+            {
+                bgCharacterList[i].SetActive(false);
+                characterList[i].SetActive(false);
+            }
+        }
+    }
+    public IEnumerator WaveSpawnHandle()
     {
         int currentWaveIDLocal = currentWaveID;
         if (currentWaveID == GamePlayUI.Instance.totalWaveCount) yield break;
         bool showPlayWave = false;
         bool showButtonNewWave = false; 
-        currentEnemyID = 0;
+        int currentEnemyID = 0;
         float timer = 0;
         Debug.Log(currentWaveIDLocal);
         float maxTime = levelData.listWaveDatas[currentWaveIDLocal].timeForWave;
@@ -69,6 +94,7 @@ public class WaveSpawner : MonoBehaviour
             if(timer > waitTimeNewEnemy)
             {
                 bool showChar = currentEnemyID == levelData.listWaveDatas[currentWaveIDLocal].listEnemySpawnDatas.Count - 1;
+                Debug.Log("Spawn enemy " + currentEnemyID + " in wave " + currentWaveIDLocal + " show char: " + showChar);
                 SpawnEnemy(enemySpawnData.enemyType, enemySpawnData.listPathID, enemySpawnData.laneID, showChar);
                 currentEnemyID++;
                 if(currentEnemyID == levelData.listWaveDatas[currentWaveIDLocal].listEnemySpawnDatas.Count)
@@ -90,10 +116,12 @@ public class WaveSpawner : MonoBehaviour
     }
     public void SpawnEnemy(EnemyType enemyType, List<int> listWayPoint, int laneID, bool showChar)
     {
-        BaseEnemy newEnemy = Instantiate(enemyPrefabs[(int)enemyType]);
+        Vector3 pos = mapData.GetPath(listWayPoint, laneID)[0].position;
+        BaseEnemy newEnemy = Instantiate(enemyPrefabs[(int)enemyType], pos,Quaternion.identity, transform);
+        count++;
+        Debug.Log("so enemy duoc sinh ra tong la " + count);
         newEnemy.gameObject.SetActive(true);
         newEnemy.waypointMover.waypoints = mapData.GetPath(listWayPoint, laneID);
-        newEnemy.transform.position = newEnemy.waypointMover.waypoints[0].position;
         newEnemy.hasChar = showChar;
     }
     public void ShowNewChar()
@@ -103,6 +131,6 @@ public class WaveSpawner : MonoBehaviour
     }
     public TextMeshProUGUI GetText()
     {
-        return characterList[currentShowID].GetComponentInChildren<TextMeshProUGUI>();
+        return characterList[currentShowID].GetComponent<TextMeshProUGUI>();
     }
 }

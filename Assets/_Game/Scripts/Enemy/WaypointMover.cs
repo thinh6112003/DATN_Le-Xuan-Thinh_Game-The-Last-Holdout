@@ -9,9 +9,13 @@ public class WaypointMover : MonoBehaviour
     public float reachDistance = 0.1f; // Khoảng cách coi là đã tới waypoint
 
     private int currentIndex = 0;
+    public bool isAttack = false;
+    public bool isFly = false;
+    Vector3 offset;
 
     private void Start()
     {
+        offset = isFly ? Vector3.up * 1.5f : Vector3.zero;
         if (waypoints.Count > 0)
             StartCoroutine(MoveAlongWaypoints());
     }
@@ -23,11 +27,16 @@ public class WaypointMover : MonoBehaviour
             Transform target = waypoints[currentIndex];
 
             // Di chuyển tới waypoint hiện tại
-            while (Vector3.Distance(transform.position, target.position) > reachDistance)
+            while (Vector3.Distance(transform.position, target.position+ offset) > reachDistance)
             {
+                if (isAttack)
+                {
+                    yield return null;
+                    continue;
+                }
                 transform.position = Vector3.MoveTowards(
                     transform.position,
-                    target.position,
+                    target.position+ offset,
                     moveSpeed * Time.deltaTime
                 );
                 transform.rotation = target.rotation;

@@ -107,9 +107,9 @@ public class GameDataEditorWindow : EditorWindow
 
     private void LoadGameData()
     {
-        if (PlayerPrefs.HasKey("DataUser"))
+        if (PlayerPrefs.HasKey("UserData"))
         {
-            string json = PlayerPrefs.GetString("DataUser");
+            string json = PlayerPrefs.GetString("UserData");
             data = JsonUtility.FromJson<UserData>(json);
         }
         else
@@ -123,7 +123,7 @@ public class GameDataEditorWindow : EditorWindow
     private void SaveGameData()
     {
         string json = JsonUtility.ToJson(data, true);
-        PlayerPrefs.SetString("DataUser", json);
+        PlayerPrefs.SetString("UserData", json);
         PlayerPrefs.Save();
         Debug.Log("✅ GameData đã được lưu:\n" + json);
     }

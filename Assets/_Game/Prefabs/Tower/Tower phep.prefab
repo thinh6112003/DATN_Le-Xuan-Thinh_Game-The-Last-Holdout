@@ -249,6 +249,10 @@ MonoBehaviour:
   - {fileID: 6979063296729860790}
   - {fileID: 5139124056865732740}
   costUpgrade: 1c00000026000000300000003a00000044000000
+  isTraiLinh: 0
+  linh1: {fileID: 0}
+  tf1: {fileID: 0}
+  attackFly: 0
 --- !u!54 &4257830373104529571
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -304,7 +308,7 @@ Transform:
   m_GameObject: {fileID: 7284350802567090499}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -0.41493}
+  m_LocalPosition: {x: 0, y: 0, z: -0.315}
   m_LocalScale: {x: 1, y: 0.42152384, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

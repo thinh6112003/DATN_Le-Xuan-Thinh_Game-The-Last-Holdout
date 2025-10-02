@@ -249,6 +249,10 @@ MonoBehaviour:
   - {fileID: 4292427084879577017}
   - {fileID: 4496928121964853744}
   costUpgrade: 16000000200000002a000000340000003e000000
+  isTraiLinh: 0
+  linh1: {fileID: 0}
+  tf1: {fileID: 0}
+  attackFly: 1
   archer: {fileID: 4959917594073575319}
   animator: {fileID: 5005608811503813409}
 --- !u!54 &4257830373104529571
@@ -338,7 +342,7 @@ Transform:
   m_GameObject: {fileID: 7284350802567090499}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -0.41493}
+  m_LocalPosition: {x: 0, y: 0, z: -0.315}
   m_LocalScale: {x: 1, y: 0.42152384, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

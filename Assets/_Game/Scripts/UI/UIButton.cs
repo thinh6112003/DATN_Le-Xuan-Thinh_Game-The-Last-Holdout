@@ -56,6 +56,7 @@ public class UIButton : Button
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        AudioManager.Instance.PlaySFX(SFXType.Click);
         base.OnPointerDown(eventData);
         //
         if (isScale && this.interactable)
@@ -66,6 +67,7 @@ public class UIButton : Button
 
     public override void OnPointerUp(PointerEventData eventData)
     {
+        
         base.OnPointerUp(eventData);
         if (isScale && this.interactable)
             transform.DOScale(vec3Default, 0.1f).SetUpdate(true);

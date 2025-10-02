@@ -33,15 +33,11 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 		if (_instance != null && _instance.GetInstanceID() != this.GetInstanceID())
 		{
 			// Destroy this instances because already exist the singleton of EventsDispatcer
-			Debug.Log($"An instance of EventDispatcher already exist : <{ _instance.name}>, So destroy this instance : <{name}>!!");
-			Destroy(gameObject);
+			Debug.Log($"An instance of EventDispatcher already exist : <{ _instance.name}>, So destroy this instance");
+			Destroy(_instance);
 		}
-		else
-		{
-			// set instance
-			_instance = this as T;
-			_instance.OnCreatedSingleton();
-		}
+		_instance = this as T;
+		_instance.OnCreatedSingleton();
 	}
 	public void OnDestroy()
 	{
